@@ -52,6 +52,10 @@ img.addEventListener("mouseup", () => {
     img.src = IMG_A;
     clickCount++;
 
+    // 更新畫面上的計數
+    document.getElementById("clickCounter").textContent =
+        "你已經點了 " + clickCount + " 下";
+
     if (clickCount === 10) {
         triggerSequence();
     }
@@ -117,9 +121,5 @@ function restart() {
     sudokuContainer.classList.add("hidden");
     message.textContent = "";
     restartBtn.classList.add("hidden");
-}
-#clickCounter {
-    font-size: 20px;
-    margin-top: 10px;
 }
 
