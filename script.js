@@ -49,15 +49,23 @@ img.addEventListener("mousedown", () => {
 
 // 滑鼠放開 → A
 img.addEventListener("mouseup", () => {
+    // 如果已經到 10 下，就不能再點，直接忽略
+    if (clickCount >= 10) return;
+
     img.src = IMG_A;
     clickCount++;
 
-    // 更新畫面上的計數
+    // 更新計數
     document.getElementById("clickCounter").textContent =
         "你已經點了 " + clickCount + " 下";
 
+    // 點滿 10 下 → 立刻啟動下一階段
     if (clickCount === 10) {
-        triggerSequence();
+        // 隱藏「你已經點了 X 下」與提示文字
+        document.getElementById("clickCounter").classList.add("hidden");
+        document.getElementById("hintText").classList.add("hidden");
+
+        triggerSequence();  // 立刻換成第三張
     }
 });
 
@@ -122,5 +130,6 @@ function restart() {
     message.textContent = "";
     restartBtn.classList.add("hidden");
 }
+
 
 
