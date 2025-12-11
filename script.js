@@ -6,11 +6,11 @@ const message = document.getElementById("message");
 const restartBtn = document.getElementById("restartBtn");
 
 // 假定你之後會提供圖片名稱請修改
-const IMG_A = "imageA.jpg";
-const IMG_B = "imageB.jpg";
-const IMG_C = "imageC.jpg";
-const IMG_D = "imageD.jpg";
-const IMG_E = "imageE.jpg";
+const IMG_A = "A.jpg";
+const IMG_B = "B.jpg";
+const IMG_C = "C.jpg";
+const IMG_D = "D.jpg";
+const IMG_E = "E.jpg";
 
 // 3×3 數獨答案（每列不能重複）
 let sudokuSolution = [];
@@ -122,4 +122,5 @@ function restart() {
     message.textContent = "";
     restartBtn.classList.add("hidden");
 }
+
 
