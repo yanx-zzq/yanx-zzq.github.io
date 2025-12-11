@@ -84,9 +84,39 @@ function triggerSequence() {
 }
 
 // 顯示數獨
-function showSudoku() {
-    generateSudoku();
-    sudokuContainer.classList.remove("hidden");
+function generateSudoku() {
+    sudokuSolution = [];
+
+    // 1. 產生正確解答（每列都 1,2,3 打亂）
+    for (let i = 0; i < 3; i++) {
+        let arr = [1, 2, 3];
+        arr.sort(() => Math.random() - 0.5);
+        sudokuSolution.push(arr);
+    }
+
+    // 2. 顯示格子
+    const grid = document.getElementById("sudokuGrid");
+    grid.innerHTML = "";
+
+    for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 3; c++) {
+            const cell = document.createElement("input");
+            cell.type = "number";
+            cell.min = 1;
+            cell.max = 3;
+            cell.dataset.row = r;
+            cell.dataset.col = c;
+
+            // 3. 隨機決定是否要給提示（1/2 機率）
+            if (Math.random() < 0.5) {
+                cell.value = sudokuSolution[r][c];
+                cell.disabled = true;   // 題目不能改
+                cell.style.background = "#ddd"; // 顯示灰底是題目
+            }
+
+            grid.appendChild(cell);
+        }
+    }
 }
 
 // 清空
@@ -130,6 +160,7 @@ function restart() {
     message.textContent = "";
     restartBtn.classList.add("hidden");
 }
+
 
 
 
