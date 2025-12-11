@@ -30,3 +30,172 @@
 <script src="script.js"></script>
 </body>
 </html>
+body {
+    text-align: center;
+    font-family: Arial;
+    background: #f0f0f0;
+}
+
+#mainImage {
+    width: 350px;
+    margin-top: 40px;
+    user-select: none;
+}
+
+.hidden {
+    display: none;
+}
+
+#sudokuContainer {
+    margin-top: 30px;
+}
+
+#sudokuGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 50px);
+    gap: 5px;
+    justify-content: center;
+}
+
+#sudokuGrid input {
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+    text-align: center;
+}
+
+.buttons {
+    margin-top: 15px;
+}
+
+button {
+    padding: 10px 15px;
+    font-size: 16px;
+    margin: 5px;
+}
+
+#message {
+    color: red;
+    font-weight: bold;
+    margin-top: 10px;
+}
+let clickCount = 0;
+
+const img = document.getElementById("mainImage");
+const sudokuContainer = document.getElementById("sudokuContainer");
+const message = document.getElementById("message");
+const restartBtn = document.getElementById("restartBtn");
+
+// 假定你之後會提供圖片名稱請修改
+const IMG_A = "imageA.jpg";
+const IMG_B = "imageB.jpg";
+const IMG_C = "imageC.jpg";
+const IMG_D = "imageD.jpg";
+const IMG_E = "imageE.jpg";
+
+// 3×3 數獨答案（每列不能重複）
+let sudokuSolution = [];
+
+// 產生簡易 3×3 數獨（每列 1～3 不重複）
+function generateSudoku() {
+    sudokuSolution = [];
+
+    for (let i = 0; i < 3; i++) {
+        let arr = [1, 2, 3];
+        arr.sort(() => Math.random() - 0.5); // 打亂
+        sudokuSolution.push(arr);
+    }
+
+    // 顯示格子
+    const grid = document.getElementById("sudokuGrid");
+    grid.innerHTML = "";
+
+    for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 3; c++) {
+            const cell = document.createElement("input");
+            cell.type = "number";
+            cell.min = 1;
+            cell.max = 3;
+            cell.dataset.row = r;
+            cell.dataset.col = c;
+            grid.appendChild(cell);
+        }
+    }
+}
+
+// 滑鼠按下 → B
+img.addEventListener("mousedown", () => {
+    img.src = IMG_B;
+});
+
+// 滑鼠放開 → A
+img.addEventListener("mouseup", () => {
+    img.src = IMG_A;
+    clickCount++;
+
+    if (clickCount === 10) {
+        triggerSequence();
+    }
+});
+
+// 點滿 10 下的流程
+function triggerSequence() {
+    img.src = IMG_C;
+
+    setTimeout(() => {
+        img.src = IMG_D;
+
+        setTimeout(() => {
+            showSudoku();
+        }, 3000);
+
+    }, 3000);
+}
+
+// 顯示數獨
+function showSudoku() {
+    generateSudoku();
+    sudokuContainer.classList.remove("hidden");
+}
+
+// 清空
+function clearSudoku() {
+    document.querySelectorAll("#sudokuGrid input").forEach(input => {
+        input.value = "";
+    });
+    message.textContent = "";
+}
+
+// 送出答案
+function submitSudoku() {
+    message.textContent = "";
+
+    const inputs = document.querySelectorAll("#sudokuGrid input");
+    let ok = true;
+
+    inputs.forEach(input => {
+        let r = input.dataset.row;
+        let c = input.dataset.col;
+
+        if (parseInt(input.value) !== sudokuSolution[r][c]) {
+            ok = false;
+        }
+    });
+
+    if (ok) {
+        img.src = IMG_E;
+        sudokuContainer.classList.add("hidden");
+        restartBtn.classList.remove("hidden");
+    } else {
+        message.textContent = "喔不!!! 外奇要窒息了!!!";
+    }
+}
+
+// 重新開始
+function restart() {
+    clickCount = 0;
+    img.src = IMG_A;
+    sudokuContainer.classList.add("hidden");
+    message.textContent = "";
+    restartBtn.classList.add("hidden");
+}
