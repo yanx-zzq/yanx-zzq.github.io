@@ -118,3 +118,8 @@ function restart() {
     message.textContent = "";
     restartBtn.classList.add("hidden");
 }
+#clickCounter {
+    font-size: 20px;
+    margin-top: 10px;
+}
+
