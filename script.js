@@ -6,12 +6,16 @@ document.addEventListener("DOMContentLoaded", () => {
     let clickCount = 0;
     let wrongCount = 0;
 
+    let timeLeft = 20;
+    let timerId = null;
+
     const img = document.getElementById("mainImage");
     const sudokuContainer = document.getElementById("sudokuContainer");
     const message = document.getElementById("message");
     const restartBtn = document.getElementById("restartBtn");
     const counterText = document.getElementById("clickCounter");
     const hintText = document.getElementById("hintText");
+    const timerText = document.getElementById("timerText");
 
     /* ======================
        圖片設定
@@ -60,7 +64,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 cell.dataset.row = r;
                 cell.dataset.col = c;
 
-                if (Math.random() < 0.5) {
+                // 提示格（題目）→ 機率降低，變難
+                if (Math.random() < 0.33) {
                     cell.value = sudokuSolution[r][c];
                     cell.disabled = true;
                     cell.style.background = "#ddd";
@@ -72,7 +77,37 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /* ======================
-       圖片點擊邏輯
+       倒數計時
+    ====================== */
+    function startTimer() {
+        timeLeft = 20;
+        timerText.textContent = `在 ${timeLeft} 秒內解開數獨，拯救外奇！！`;
+
+        timerId = setInterval(() => {
+            timeLeft--;
+            timerText.textContent = `在 ${timeLeft} 秒內解開數獨，拯救外奇！！`;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerId);
+                timerId = null;
+
+                img.src = IMG_F;
+                sudokuContainer.classList.add("hidden");
+                restartBtn.classList.remove("hidden");
+                message.textContent = "";
+            }
+        }, 1000);
+    }
+
+    function stopTimer() {
+        if (timerId) {
+            clearInterval(timerId);
+            timerId = null;
+        }
+    }
+
+    /* ======================
+       圖片點擊流程
     ====================== */
     img.addEventListener("mousedown", () => {
         if (clickCount >= 10) return;
@@ -84,7 +119,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         img.src = IMG_A;
         clickCount++;
-
         counterText.textContent = `你已經點了 ${clickCount} 下`;
 
         if (clickCount === 10) {
@@ -110,10 +144,11 @@ document.addEventListener("DOMContentLoaded", () => {
     function showSudoku() {
         generateSudoku();
         sudokuContainer.classList.remove("hidden");
+        startTimer();
     }
 
     /* ======================
-       數獨按鈕
+       數獨按鈕（HTML onclick 用）
     ====================== */
     window.clearSudoku = function () {
         document.querySelectorAll("#sudokuGrid input").forEach(input => {
@@ -135,6 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (ok) {
+            stopTimer();
             img.src = IMG_E;
             sudokuContainer.classList.add("hidden");
             restartBtn.classList.remove("hidden");
@@ -142,6 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
             wrongCount++;
 
             if (wrongCount >= 3) {
+                stopTimer();
                 img.src = IMG_F;
                 sudokuContainer.classList.add("hidden");
                 restartBtn.classList.remove("hidden");
@@ -156,6 +193,8 @@ document.addEventListener("DOMContentLoaded", () => {
        重新開始
     ====================== */
     window.restart = function () {
+        stopTimer();
+
         clickCount = 0;
         wrongCount = 0;
 
@@ -170,4 +209,3 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
 });
-
