@@ -10,27 +10,39 @@ const hintText = document.getElementById("hintText");
 
 // 請換成你的圖片檔名
 let wrongCount = 0; // 計算答錯次數
-const IMG_F = "imageF.jpg"; // 新增照片 F
+const IMG_F = "F.jpg"; // 新增照片 F
 const IMG_A = "A.jpg";  // 初始
 const IMG_B = "B.jpg";  // 按住
 const IMG_C = "C.jpg";  // 第 10 下
 const IMG_D = "D.jpg";  // 3 秒後
 const IMG_E = "E.jpg";  // 答對後
 
+// 產生有題目的 3×3（每列不重複）
 let sudokuSolution = [];
 
-// 產生有題目的 3×3（每列不重複）
+/* 洗牌工具 */
+function shuffle(arr) {
+    return arr.sort(() => Math.random() - 0.5);
+}
+
+/* 產生 3×3 合法答案（橫直都不重複） */
+function generateSolution() {
+    const base = [
+        [1, 2, 3],
+        [2, 3, 1],
+        [3, 1, 2]
+    ];
+
+    const nums = shuffle([1, 2, 3]);
+    sudokuSolution = base.map(row =>
+        row.map(n => nums[n - 1])
+    );
+}
+
+/* 產生有題目的數獨 */
 function generateSudoku() {
-    sudokuSolution = [];
+    generateSolution();
 
-    // 1. 先產生答案（每列都是 1~3 打亂）
-    for (let i = 0; i < 3; i++) {
-        let arr = [1, 2, 3];
-        arr.sort(() => Math.random() - 0.5);
-        sudokuSolution.push(arr);
-    }
-
-    // 2. 填進畫面
     const grid = document.getElementById("sudokuGrid");
     grid.innerHTML = "";
 
@@ -43,7 +55,6 @@ function generateSudoku() {
             cell.dataset.row = r;
             cell.dataset.col = c;
 
-            // 隨機生成題目（50% 機率）
             if (Math.random() < 0.5) {
                 cell.value = sudokuSolution[r][c];
                 cell.disabled = true;
@@ -170,3 +181,4 @@ function restart() {
 
     counterText.textContent = "你已經點了 0 下";
 }
+
