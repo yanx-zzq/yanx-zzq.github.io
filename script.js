@@ -9,6 +9,8 @@ const counterText = document.getElementById("clickCounter");
 const hintText = document.getElementById("hintText");
 
 // 請換成你的圖片檔名
+let wrongCount = 0; // 計算答錯次數
+const IMG_F = "imageF.jpg"; // 新增照片 F
 const IMG_A = "A.jpg";  // 初始
 const IMG_B = "B.jpg";  // 按住
 const IMG_C = "C.jpg";  // 第 10 下
@@ -132,25 +134,37 @@ function submitSudoku() {
     });
 
     if (ok) {
-        // 答對 → E 照片
-        img.src = IMG_E;
+    // 答對 → E 照片
+    img.src = IMG_E;
+    sudokuContainer.classList.add("hidden");
+    restartBtn.classList.remove("hidden");
+} else {
+    wrongCount++;
+
+    if (wrongCount >= 3) {
+        // 失敗三次 → F 照片
+        img.src = IMG_F;
         sudokuContainer.classList.add("hidden");
+
+        // 顯示重新開始按鈕
         restartBtn.classList.remove("hidden");
+
+        message.textContent = ""; // 清除警告文字
     } else {
-        message.textContent = "喔不!!! 外奇要窒息了!!!";
+        message.textContent = "喔不!!! 外奇要窒息了!!!（第 " + wrongCount + " 次）";
     }
 }
 
 // 重新開始
 function restart() {
     clickCount = 0;
+    wrongCount = 0;  // ← 加這行
     img.src = IMG_A;
 
     sudokuContainer.classList.add("hidden");
     restartBtn.classList.add("hidden");
     message.textContent = "";
 
-    // 恢復顯示提示文字
     counterText.classList.remove("hidden");
     hintText.classList.remove("hidden");
 
