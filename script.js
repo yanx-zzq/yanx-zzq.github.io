@@ -11,9 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const hintText = document.getElementById("hintText");
 
     // 👇👇👇 你原本的程式碼全部原封不動放這裡 👇👇👇
-
-});
-let clickCount = 0;
+    let clickCount = 0;
 
 const img = document.getElementById("mainImage");
 const sudokuContainer = document.getElementById("sudokuContainer");
@@ -196,5 +194,7 @@ function restart() {
 
     counterText.textContent = "你已經點了 0 下";
 }
+
 });
+
 
